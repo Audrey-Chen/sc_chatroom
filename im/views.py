@@ -4,10 +4,10 @@ from django.http import HttpResponse
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.core import serializers
-from models import ChatUser, Message
+from im.models import ChatUser, Message
 
 from collections import defaultdict
-from Queue import Queue
+from multiprocessing import Queue
 import json
 
 im_listen_dict = defaultdict(Queue)
@@ -23,7 +23,9 @@ def msg_handler(request):
         return JsonResponse(msg.to_json())
     elif request.method == 'POST':
         sender = ChatUser.objects.get(id=request.session['user-id'])
-        msg = json.loads(request.body)
+        raw_data_msg = request.body.decode('utf-8')
+        msg = json.loads(raw_data_msg);
+        #msg = json.loads(request.body)
         msg['sender'] =  sender
         msg['receiver'] = ChatUser.objects.get(id=msg['receiver'])
         msg = Message.create(**msg)
@@ -48,7 +50,9 @@ def login(request):
             receiver = receiver.to_json()
         return JsonResponse({'receiver':receiver})
     elif request.method == 'POST':
-        profile = json.loads(request.body)
+        #profile = json.loads(request.body)
+        raw_data = request.body.decode('utf-8')
+        profile = json.loads(raw_data);
         # profile: name, age, gender
         usr = ChatUser.create(**profile)
         usr.save()
