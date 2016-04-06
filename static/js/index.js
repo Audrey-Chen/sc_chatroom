@@ -196,7 +196,51 @@ function onNewMessage(msg) {
 
 function setProfile(receiver) {
     $('.chatroom').addClass('connected')
-    $('span.profile_name').text(receiver.name).siblings('.profile_age').text(receiver.age);
+    $('span.profile_name').html("Name: " + receiver.name).siblings('.profile_age').html("</br>Age: " + receiver.age);
     receiverid = receiver.id;
     $(".msg-placeholder").text('Write something...');
+}
+/*
+$.('.useCamera').on('click',function(event){
+    $('.useCamera').hide();
+    navigator.getUserMedia = (navigator.getUserMedia ||
+                             navigator.webkitGetUserMedia ||
+                             navigator.mozGetUserMedia ||
+                             navigator.msGetUserMedia);
+
+    if(navigator.getUserMedia){
+        navigator.getUserMedia({video:true}, onSuccess, onFail);
+    }
+    else{
+        alert('webRTC not available');
+    }
+});*/
+
+function useCamera(){
+    //$('.camera').hide();
+    document.getElementById('camera').style.visibility = 'hidden';
+    navigator.getUserMedia = (navigator.getUserMedia ||
+                             navigator.webkitGetUserMedia ||
+                             navigator.mozGetUserMedia ||
+                             navigator.msGetUserMedia);
+
+    if(navigator.getUserMedia)
+        navigator.getUserMedia({video:true}, onSuccess, onFail);
+    else
+        alert('webRTC not available');
+}
+
+function onSuccess(stream){   
+    var url = window.URL || window.webkitURL;
+    document.getElementById('camFeed').src = url.createObjectURL(stream);
+}
+
+function onFail(){
+    alert('could not connect stream');
+}
+
+function takePhoto(){
+    var c = document.getElementById('photo');
+    var v = document.getElementById('camFeed');
+    c.getContext('2d').drawImage(v, 0, 0, 240, 180);
 }
