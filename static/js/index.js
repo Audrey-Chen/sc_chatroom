@@ -254,5 +254,5 @@ function takePhoto(){
     var v = document.getElementById('camFeed');
     document.getElementById('shot').style.visibility = 'hidden';
     c.getContext('2d').drawImage(v, 0, 0, 240, 180);
-    v.style.visibility = 'hidden';
+    document.getElementById('camFeed').style.visibility = 'none';
 }
