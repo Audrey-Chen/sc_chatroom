@@ -228,6 +228,7 @@ function setProfile(receiver) {
 
 function useCamera(){
     //$('.camera').hide();
+    document.getElementById('camera').style.visibility = 'hidden';
     navigator.getUserMedia = (navigator.getUserMedia ||
                              navigator.webkitGetUserMedia ||
                              navigator.mozGetUserMedia ||
@@ -253,4 +254,5 @@ function takePhoto(){
     var v = document.getElementById('camFeed');
     document.getElementById('shot').style.visibility = 'hidden';
     c.getContext('2d').drawImage(v, 0, 0, 240, 180);
+    v.style.visibility = 'hidden';
 }
