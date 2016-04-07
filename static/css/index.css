@@ -378,7 +378,7 @@ img::-moz-selection {
 .dialogue {
     border-top: 15px #1d9b6c solid;
     border-bottom: 6px #1d9b6c solid;
-    padding: 20px 0 10px 0;
+    padding: 20px 10px 10px 10px;
     background: #fcfcfc;
     color: black;
 }
@@ -395,4 +395,23 @@ section {
 
 .hidden {
   opacity: 0;
+}
+
+.anony_btn {
+    padding: 20px 0 10px 0;
+}
+
+.provide_btn {
+    padding: 20px 0 10px 0;
+}
+
+
+.camfeed {
+    width: 240px;
+    height: 180px;
+}
+
+.photo {
+    width: 240px;
+    height: 180px;
 }

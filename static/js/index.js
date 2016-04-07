@@ -6,6 +6,8 @@
 //         $(".navbar-fixed-top").removeClass("top-nav-collapse");
 //     }
 // });
+var isAnonymous = 'false';
+
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
@@ -45,7 +47,8 @@ $(function() {
 function initContent() {
     $('#login-form').on("submit", function(event){
         event.preventDefault();
-        login();
+        isAnonymous = false;
+        login(isAnonymous);
     });
 }
 
@@ -83,13 +86,23 @@ function enter_chatroom() {
     $('#chat-room').removeClass('hidden').siblings().addClass('hidden')
 }
 
-function login() {
-    logindata = {};
-    test = $('#login-form').serializeArray()
-    for(obj in test) {
-        t = test[obj];
-        logindata[t.name] =t.value.trim();
+function login(isAnonymous) {
+    
+    if(isAnonymous){
+        logindata = {};
+        logindata.name = 'Anonymous';
+        logindata.age = '1';
+        logindata.gender = 'other';
     }
+    else{
+        logindata = {};
+        test = $('#login-form').serializeArray()
+        for(obj in test) {
+            t = test[obj];
+            logindata[t.name] =t.value.trim();
+        }
+    }
+
     // validate login data
     if(logindata.name.length > 0 && parseInt(logindata.age) > 0 && logindata.gender) {
         $.ajax({
@@ -104,9 +117,12 @@ function login() {
             .find('input[name="age"]').css('background-color', (parseInt(logindata.age) > 0) ? '#fff':'gold').end()
             .find('div.gender > div').css('background-color', (logindata.gender) ? '#fff':'gold');
         return false;
-    }
-        
-    
+    }    
+}
+
+function anonymousLogin() {
+    isAnonymous = true;
+    login(isAnonymous);
 }
 
 myId = '';
@@ -195,30 +211,23 @@ function onNewMessage(msg) {
 }
 
 function setProfile(receiver) {
-    $('.chatroom').addClass('connected')
-    $('span.profile_name').html("Name: " + receiver.name).siblings('.profile_age').html("</br>Age: " + receiver.age);
+    $('.chatroom').addClass('connected');
+
+    //$('span.profile_name').html("Name: " + receiver.name).siblings('.profile_age').html("</br>Age: " + receiver.age);
+    
+    if(!isAnonymous){
+        $('span.profile_name').html("Name: " + receiver.name).siblings('.profile_age').html("</br>Age: " + receiver.age);
+    }
+    else if(isAnonymous){
+        $('span.profile_name').html("");
+    }
+
     receiverid = receiver.id;
     $(".msg-placeholder").text('Write something...');
 }
-/*
-$.('.useCamera').on('click',function(event){
-    $('.useCamera').hide();
-    navigator.getUserMedia = (navigator.getUserMedia ||
-                             navigator.webkitGetUserMedia ||
-                             navigator.mozGetUserMedia ||
-                             navigator.msGetUserMedia);
-
-    if(navigator.getUserMedia){
-        navigator.getUserMedia({video:true}, onSuccess, onFail);
-    }
-    else{
-        alert('webRTC not available');
-    }
-});*/
 
 function useCamera(){
     //$('.camera').hide();
-    document.getElementById('camera').style.visibility = 'hidden';
     navigator.getUserMedia = (navigator.getUserMedia ||
                              navigator.webkitGetUserMedia ||
                              navigator.mozGetUserMedia ||
@@ -242,5 +251,6 @@ function onFail(){
 function takePhoto(){
     var c = document.getElementById('photo');
     var v = document.getElementById('camFeed');
+    document.getElementById('shot').style.visibility = 'hidden';
     c.getContext('2d').drawImage(v, 0, 0, 240, 180);
 }

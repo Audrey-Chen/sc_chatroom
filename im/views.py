@@ -23,7 +23,8 @@ def msg_handler(request):
         return JsonResponse(msg.to_json())
     elif request.method == 'POST':
         sender = ChatUser.objects.get(id=request.session['user-id'])
-        raw_data_msg = request.body.decode('utf-8')
+        # For Python 3 up
+        raw_data_msg = request.body.decode('utf-8') 
         msg = json.loads(raw_data_msg);
         #msg = json.loads(request.body)
         msg['sender'] =  sender
@@ -51,6 +52,7 @@ def login(request):
         return JsonResponse({'receiver':receiver})
     elif request.method == 'POST':
         #profile = json.loads(request.body)
+        #for python 3 up
         raw_data = request.body.decode('utf-8')
         profile = json.loads(raw_data);
         # profile: name, age, gender
